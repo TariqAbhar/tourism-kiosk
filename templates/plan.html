@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plan Your Trip</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #e8f5e9; }
+        table { margin: auto; border-collapse: collapse; width: 50%; background: white; }
+        th, td { border: 1px solid #ddd; padding: 12px; }
+        th { background-color: #4CAF50; color: white; }
+        .btn-pdf { background-color: red; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Plan Your Trip</h1>
+    <a href="{{ url_for('home') }}">Back to Home</a>
+    <br><br>
+
+    <table>
+        <tr>
+            <th>Destination</th>
+            <th>State</th>
+            <th>Budget (RM)</th>
+        </tr>
+        <tr>
+            <td>Twin Towers</td>
+            <td>KL</td>
+            <td>80.00</td>
+        </tr>
+        <tr>
+            <td>Legoland</td>
+            <td>Johor</td>
+            <td>200.00</td>
+        </tr>
+    </table>
+    <br><br>
+    <a href="#" class="btn-pdf">Generate PDF</a>
+</body>
+</html>
