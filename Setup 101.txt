@@ -1,0 +1,8 @@
+1. Install Python
+2. Install Visual Studio Code
+3. Install Python Extensions on VSC
+4. Create Project Folder on Desktop "Tourism_Kiosk"
+5. Open Folder on VSC
+6. Install & Setup Git 
+7. Create Python Virtual Environment
+8. Install Flask
