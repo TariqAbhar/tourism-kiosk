@@ -40,7 +40,7 @@
             position: relative; display: inline-block;
         }
         
-        .section-title::after { content: ''; display: block; width: 200px; height: 3px; background: #e8e00b; margin: 10px auto 0; }
+        .section-title::after { content: ''; display: block; width: 200px; height: 3px; background: #0b0c01; margin: 10px auto 0; }
 
         .video-box { 
             width: 60%;
@@ -53,14 +53,14 @@
             background-color: rgb(244, 246, 247); width: 300px; border-radius: 12px; overflow: hidden; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease; 
         }
-        .food-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .food-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0, 217, 237, 0.2); }
         
         .card-image { width: 100%; height: 200px; object-fit: cover; }
         .card-content { padding: 20px; text-align: left; }
         
         .card-content h3 { 
             font-family: 'Poppins Bold', Futura; 
-            font-size: 1.4rem; margin: 0 0 10px; color: #f2ea00; 
+            font-size: 1.4rem; margin: 0 0 10px; color: #0e0e02; 
         }
         .card-content p { 
             font-family: 'Lato', sans-serif; 
@@ -69,6 +69,77 @@
 
         hr.divider { margin: 40px auto; width: 80%; border: 0; border-top: 1px solid #ddd; }
         
+        /* --- APPEND THIS TO YOUR EXISTING CSS --- */
+    
+    /* The Modal Overlay (Dim Background) */
+    .modal-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center; align-items: center;
+        opacity: 0; visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 2000; /* High z-index to sit on top of everything */
+    }
+
+    .modal-overlay.active {
+        opacity: 1; visibility: visible;
+    }
+
+    /* The Modal Box */
+    .modal-box {
+        background: white;
+        width: 900px; max-width: 90%; height: 500px;
+        display: flex;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        position: relative;
+    }
+
+    .modal-image-container {
+        flex: 1;
+        background-size: cover; background-position: center;
+    }
+
+    .modal-content-box {
+        flex: 1; padding: 50px;
+        display: flex; flex-direction: column; justify-content: center;
+        text-align: left; position: relative;
+    }
+
+    .close-btn {
+        position: absolute; top: 20px; right: 25px;
+        font-size: 28px; color: #888; cursor: pointer;
+        transition: color 0.2s;
+    }
+    .close-btn:hover { color: #333; }
+
+    /* Modal Typography */
+    #modalTitle {
+        font-family: 'Kaushan Script', cursive; /* Matching your font link */
+        font-size: 3rem; color: #008080; margin: 0 0 15px 0;
+    }
+
+    #modalDesc {
+        font-family: 'Poppins', sans-serif;
+        color: #555; line-height: 1.7; font-size: 1rem; margin-bottom: 30px;
+    }
+
+    .explore-btn {
+        background-color: #008080; color: white; border: none;
+        padding: 12px 28px; font-size: 1rem; font-weight: 600;
+        border-radius: 6px; cursor: pointer; width: fit-content;
+    }
+    .explore-btn:hover { background-color: #006666; }
+
+    @media (max-width: 768px) {
+        .modal-box { flex-direction: column; height: auto; max-height: 90vh; overflow-y: auto; }
+        .modal-image-container { height: 200px; }
+        .modal-content-box { padding: 30px; }
+    }
     </style>
 </head>
 <body>
@@ -98,21 +169,21 @@
     <section>
         <h2 class="section-title">Local Delicacies</h2>
         <div class="cards-container">
-            <div class="food-card">
+            <div class="food-card" onclick="openModal('nasi-lemak')" style="cursor: pointer;" >
                 <img src="{{ url_for('static', filename='images/nasilemakk.jpg') }}" alt="Nasi Lemak" class="card-image">
                 <div class="card-content">
                     <h3>Nasi Lemak</h3>
                     <p>Fragrant rice cooked in coconut milk and pandan leaf.</p>
                 </div>
             </div>
-            <div class="food-card">
+            <div class="food-card" onclick="openModal('satay')" style="cursor: pointer;">
                 <img src="{{ url_for('static', filename='images/satay.jpg') }}" alt="Satay" class="card-image">
                 <div class="card-content">
                     <h3>Satay</h3>
                     <p>Seasoned, skewered and grilled meat, served with peanut sauce.</p>
                 </div>
             </div>
-            <div class="food-card">
+            <div class="food-card" onclick="openModal('laksa')" style="cursor: pointer;"> 
                 <img src="{{ url_for('static', filename='images/laksa.jpg') }}" alt="Laksa" class="card-image">
                 <div class="card-content">
                     <h3>Laksa</h3>
@@ -127,21 +198,21 @@
     <section>
         <h2 class="section-title">Traditional Attire</h2>
         <div class="cards-container">
-            <div class="food-card">
+            <div class="food-card"onclick="openModal('baju-kurung')" style="cursor: pointer;">
                 <img src="{{ url_for('static', filename='images/bajukurung1.jpg') }}" alt="Baju Kurung" class="card-image">
                 <div class="card-content">
                     <h3>Malay: Baju Kurung</h3>
                     <p>Elegant, loose-fitting traditional attire comprising a blouse and a long skirt.</p>
                 </div>
             </div>
-            <div class="food-card">
+            <div class="food-card"onclick="openModal('cheongsam')" style="cursor: pointer;">
                 <img src="{{ url_for('static', filename='images/cheongsam.jpg') }}" alt="Cheongsam" class="card-image">
                 <div class="card-content">
                     <h3>Chinese: Cheongsam</h3>
                     <p>A stylish, one-piece dress with a high collar and distinctive button design.</p>
                 </div>
             </div>
-            <div class="food-card">
+            <div class="food-card"onclick="openModal('saree')" style="cursor: pointer;">
                 <img src="{{ url_for('static', filename='images/saree.jpg') }}" alt="Saree" class="card-image">
                 <div class="card-content">
                     <h3>Indian: Saree</h3>
@@ -156,21 +227,21 @@
     <section>
         <h2 class="section-title">Major Festivals</h2>
         <div class="cards-container">
-            <div class="food-card">
+            <div class="food-card" onclick="openModal('raya')" style="cursor: pointer;">
                 <img src="{{ url_for('static', filename='images/raya.jpg') }}" alt="Hari Raya" class="card-image">
                 <div class="card-content">
                     <h3>Hari Raya Aidilfitri</h3>
                     <p>Celebrated by Muslims to mark the end of the fasting month of Ramadan.</p>
                 </div>
             </div>
-            <div class="food-card">
+            <div class="food-card"onclick="openModal('cny')" style="cursor: pointer;">
                 <img src="{{ url_for('static', filename='images/cny.jpg') }}" alt="CNY" class="card-image">
                 <div class="card-content">
                     <h3>Chinese New Year</h3>
                     <p>A grand celebration welcoming the new lunar year with lion dances and reunion dinners.</p>
                 </div>
             </div>
-            <div class="food-card">
+            <div class="food-card" onclick="openModal('deepavali')" style="cursor: pointer;">
                 <img src="{{ url_for('static', filename='images/deepavali.jpg') }}" alt="Deepavali" class="card-image">
                 <div class="card-content">
                     <h3>Deepavali</h3>
@@ -179,6 +250,97 @@
             </div>
         </div>
     </section>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <div class="modal-image-container" id="modalImage"></div>
+            <div class="modal-content-box">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle">Dish Name</h2>
+                <p id="modalDesc">Description...</p>
+                <button class="explore-btn">Order Now</button>
+            </div>
+        </div>
+    </div>
 
+    <script>
+    // COMPLETE DATA FOR ALL SECTIONS
+    const modalData = {
+        // --- 1. Local Delicacies ---
+        'nasi-lemak': {
+            title: 'Nasi Lemak',
+            desc: 'Nasi Lemak is considered the national dish. It features fragrant rice cooked in coconut milk and pandan leaf, served with sambal, anchovies, peanuts, and boiled egg.',
+            img: "{{ url_for('static', filename='images/nasilemakk.jpg') }}" 
+        },
+        'satay': {
+            title: 'Satay',
+            desc: 'Satay is a dish of seasoned, skewered and grilled meat, served with a peanut sauce. It is a popular street food and delicacy.',
+            img: "{{ url_for('static', filename='images/satay.jpg') }}"
+        },
+        'laksa': {
+            title: 'Laksa',
+            desc: 'Laksa is a spicy noodle soup popular in Peranakan cuisine. It consists of thick wheat noodles or rice vermicelli with chicken, prawn or fish.',
+            img: "{{ url_for('static', filename='images/laksa.jpg') }}"
+        },
+
+        // --- 2. Traditional Attire ---
+        'baju-kurung': {
+            title: 'Malay: Baju Kurung',
+            desc: 'The Baju Kurung is a traditional Malay costume which translates loosely to "enclosed dress". This elegant, loose-fitting attire comprises a blouse and a long skirt.',
+            img: "{{ url_for('static', filename='images/bajukurung1.jpg') }}"
+        },
+        'cheongsam': {
+            title: 'Chinese: Cheongsam',
+            desc: 'The Cheongsam (or Qipao) is a stylish traditional Chinese dress. Known for its high collar and distinctive button design, it is often made of silk.',
+            img: "{{ url_for('static', filename='images/cheongsam.jpg') }}"
+        },
+        'saree': {
+            title: 'Indian: Saree',
+            desc: 'The Saree is a traditional garment worn by women in India and Malaysia. It consists of a beautiful drape of fabric, typically 6 yards long, wrapped around the waist.',
+            img: "{{ url_for('static', filename='images/saree.jpg') }}"
+        },
+
+        // --- 3. Major Festivals (NEW) ---
+        'raya': {
+            title: 'Hari Raya Aidilfitri',
+            desc: 'Hari Raya Aidilfitri is celebrated by Muslims worldwide to mark the end of Ramadan, the holy month of fasting. It is a time of forgiveness and visiting loved ones.',
+            img: "{{ url_for('static', filename='images/raya.jpg') }}"
+        },
+        'cny': {
+            title: 'Chinese New Year',
+            desc: 'Chinese New Year marks the beginning of a new year on the traditional lunisolar calendar. It is celebrated with family reunions, lion dances, and the giving of red packets (ang pow).',
+            img: "{{ url_for('static', filename='images/cny.jpg') }}"
+        },
+        'deepavali': {
+            title: 'Deepavali',
+            desc: 'Deepavali, the "Festival of Lights", is celebrated by Hindus. It symbolizes the spiritual victory of light over darkness, good over evil, and knowledge over ignorance.',
+            img: "{{ url_for('static', filename='images/deepavali.jpg') }}"
+        }
+    };
+
+    const modal = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalImage = document.getElementById('modalImage');
+
+    function openModal(key) {
+        // Look up the key in our expanded data object
+        const data = modalData[key];
+        
+        if (data) {
+            modalTitle.innerText = data.title;
+            modalDesc.innerText = data.desc;
+            modalImage.style.backgroundImage = `url('${data.img}')`;
+            modal.classList.add('active');
+        }
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+</script>
 </body>
 </html>
