@@ -9,23 +9,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        /* --- GLOBAL STYLES (From Our Template) --- */
-        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background-color: #fff3e0; overflow-x: hidden; text-align: center; }
+        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background-color: #f9f9f9; overflow-x: hidden; text-align: center; }
         
-        /* --- NAVBAR (Consistent across all pages) --- */
         .navbar { background-color: #008080; padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .nav-logo img { height: 60px; border-radius: 5px; background: white; padding: 5px; }
-        .nav-links a { color: white; text-decoration: none; margin-left: 30px; font-family: 'Poppins', sans-serif; font-weight: 500; transition: color 0.3s; }
+        .nav-logo img { height: 60px; border-radius: 5px; background: rgb(8, 159, 240); padding: 5px; }
+        .nav-links a { color: rgb(245, 245, 245); text-decoration: none; margin-left: 30px; font-family: 'Poppins', sans-serif; font-weight: 500; transition: color 0.3s; }
         .nav-links a:hover { color: #FFD700; }
-        
-        /* --- MOBILE NAVBAR FIX --- */
+    
         @media (max-width: 900px) {
             .navbar { flex-direction: column; padding: 15px; }
             .nav-links { margin-top: 15px; display: flex; flex-wrap: wrap; justify-content: center; }
             .nav-links a { margin: 5px 10px; font-size: 14px; }
         }
 
-        /* --- FRIEND'S STYLES (Merged & Fixed) --- */
         h1.page-title {
             font-family: 'Playfair Display', serif; 
             font-size: 3.5rem; 
@@ -44,18 +40,17 @@
             position: relative; display: inline-block;
         }
         
-        /* Add our underline effect to friend's titles */
-        .section-title::after { content: ''; display: block; width: 60px; height: 3px; background: #d32f2f; margin: 10px auto 0; }
+        .section-title::after { content: ''; display: block; width: 200px; height: 3px; background: #e8e00b; margin: 10px auto 0; }
 
         .video-box { 
-            width: 60%; /* Fixed width */
-            margin: 20px auto; background: black; color: white; padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 60%;
+            margin: 20px auto; background: black; color: rgb(255, 255, 255); padding: 15px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .cards-container { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; padding-bottom: 40px; }
         
         .food-card { 
-            background-color: white; width: 300px; border-radius: 12px; overflow: hidden; 
+            background-color: rgb(244, 246, 247); width: 300px; border-radius: 12px; overflow: hidden; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: transform 0.3s ease; 
         }
         .food-card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
@@ -64,8 +59,8 @@
         .card-content { padding: 20px; text-align: left; }
         
         .card-content h3 { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 1.4rem; margin: 0 0 10px; color: #d32f2f; 
+            font-family: 'Poppins Bold', Futura; 
+            font-size: 1.4rem; margin: 0 0 10px; color: #f2ea00; 
         }
         .card-content p { 
             font-family: 'Lato', sans-serif; 
@@ -97,7 +92,7 @@
             <source src="{{ url_for('static', filename='videos/culture_video.mp4') }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <h3 style="color: white; margin-top: 10px; font-family: 'Poppins', sans-serif;">Traditional Performance: Zapin</h3>
+        <h3 style="color: white; margin-top: 10px; font-family: 'Poppins', sans-serif;">Culture In Malaysia</h3>
     </div>
 
     <section>
