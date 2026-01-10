@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400&display=swap" rel="stylesheet">
+    <title>Culture - Malaysia Kiosk</title>
+    <style>
+
+    h1 {
+        font-family: 'Playfair Display', serif; 
+        font-size: 3.5rem; 
+        color: #2c3e50; 
+        margin-top: 40px;
+        margin-bottom: 20px;
+        text-transform: uppercase; 
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1); 
+    }
+        body { font-family: sans-serif; text-align: center; background-color: #fff3e0; }
+        .video-box { width: 10%; margin: 10px auto; background: black; color: white; padding: 10px; }
+        .food-section { text-align: center; padding: 40px 20px; }
+        .section-title { font-size: 2rem; color: #333; margin-bottom: 30px; font-weight: bold; }
+        .cards-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .food-card { background-color: white; width: 300px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+        .food-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        .card-image { width: 100%; height: 200px; object-fit: cover; }
+        .card-content { padding: 15px; }
+        .card-content h3 { margin: 0 0 10px; color: #d32f2f; }
+        .card-content p { font-size: 0.9rem; color: #666; margin: 0; }
+        
+    .back-btn {
+        display: inline-block;
+        background-color: #d32f2f;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s, background-color 0.2s;
+        margin-bottom: 20px;
+    }
+    .back-btn:hover {
+        background-color: #b71c1c; 
+        transform: scale(1.05);
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif; 
+        font-size: 2.5rem; 
+        color: #2c3e50; 
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .card-content h3 {
+        font-family: 'Playfair Display', serif; 
+        font-size: 1.4rem;
+        margin: 0 0 10px;
+        color: #d32f2f;
+    }    
+
+    .card-content p {
+        font-family: 'Lato', sans-serif;
+        font-size: 1rem;
+        color: #555;
+        margin: 0;
+        line-height: 1.5; 
+    }
+    
+    </style>
+</head>
+<body>
+    <h1>Malaysian Culture</h1>
+    <a href="{{ url_for('home') }}" class="back-btn"> Back to Home</a>
+    
+<div class="video-box" style="background: black; padding: 20px; border-radius: 10px; width: 30%; margin: 20px auto;">
+        
+        <video width="100%" height="auto" controls poster="{{ url_for('static', filename='images/banner.jpg') }}">
+            <source src="{{ url_for('static', filename='videos/culture_video.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+        <h3 style="color: white; margin-top: 10px;">Traditional Performance: Zapin</h3>
+    </div>
+    <section class="food-section">
+        <h2 class="section-title">Local Delicacies</h2>
+        
+        <div class="cards-container">
+            <div class="food-card">
+               <img src="{{ url_for('static', filename='images/nasilemakk.jpg') }}" alt="Nasi Lemak" class="card-image">
+                <div class="card-content">
+                    <h3>Nasi Lemak</h3>
+                    <p>Fragrant rice cooked in coconut milk and pandan leaf.</p>
+                </div>
+            </div>
+
+            <div class="food-card">
+                 <img src="{{ url_for('static', filename='images/satay.jpg') }}" alt="Satay" class="card-image">
+                <div class="card-content">
+                    <h3>Satay</h3>
+                    <p>Seasoned, skewered and grilled meat, served with peanut sauce.</p>
+                </div>
+            </div>
+
+            <div class="food-card">
+               <img src="{{ url_for('static', filename='images/laksa.jpg') }}" alt="Laksa" class="card-image">
+                <div class="card-content">
+                    <h3>Laksa</h3>
+                    <p>Spicy noodle soup with a rich curry coconut milk base.</p>
+                </div>
+            </div>
+        </div>
+        <hr style="margin: 40px auto; width: 80%; border: 1px solid #ddd;">
+
+    <section class="food-section"> <h2 class="section-title">Traditional Attire</h2>
+        
+        <div class="cards-container">
+            
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/bajukurung1.jpg') }}" alt="Baju Kurung" class="card-image">
+                <div class="card-content">
+                    <h3>Malay: Baju Kurung</h3>
+                    <p>Elegant, loose-fitting traditional attire comprising a blouse and a long skirt.</p>
+                </div>
+            </div>
+
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/cheongsam.jpg') }}" alt="Cheongsam" class="card-image">
+                <div class="card-content">
+                    <h3>Chinese: Cheongsam</h3>
+                    <p>A stylish, one-piece dress with a high collar and distinctive button design.</p>
+                </div>
+            </div>
+
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/saree.jpg') }}" alt="Saree" class="card-image">
+                <div class="card-content">
+                    <h3>Indian: Saree</h3>
+                    <p>A beautiful drape of fabric, typically 6 yards long, wrapped around the waist and shoulder.</p>
+                </div>
+            </div>
+
+        </div>
+        <hr style="margin: 40px auto; width: 80%; border: 1px solid #ddd;">
+
+    <section class="food-section">
+        <h2 class="section-title">Major Festivals</h2>
+        
+        <div class="cards-container">
+            
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/raya.jpg') }}" alt="Hari Raya Aidilfitri" class="card-image">
+                <div class="card-content">
+                    <h3>Hari Raya Aidilfitri</h3>
+                    <p>Celebrated by Muslims to mark the end of the fasting month of Ramadan.</p>
+                </div>
+            </div>
+
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/cny.jpg') }}" alt="Chinese New Year" class="card-image">
+                <div class="card-content">
+                    <h3>Chinese New Year</h3>
+                    <p>A grand celebration welcoming the new lunar year with lion dances and reunion dinners.</p>
+                </div>
+            </div>
+
+            <div class="food-card">
+                <img src="{{ url_for('static', filename='images/deepavali.jpg') }}" alt="Deepavali" class="card-image">
+                <div class="card-content">
+                    <h3>Deepavali</h3>
+                    <p>The 'Festival of Lights' celebrated by Hindus, symbolizing the victory of light over darkness.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    </section>
+    </section> 
+</body>
+</html>

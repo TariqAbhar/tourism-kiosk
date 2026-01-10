@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Destinations - Malaysia Kiosk</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background-color: #e0f7fa; }
+        .card { border: 1px solid #ccc; padding: 20px; display: inline-block; margin: 10px; background: white; }
+    </style>
+</head>
+<body>
+    <h1>Popular Destinations</h1>
+    <p>Select a state to explore:</p>
+    
+    <a href="{{ url_for('home') }}">Back to Home</a>
+    <br><br>
+
+    <div class="card">
+        <h3>Kuala Lumpur</h3>
+        <p>The Heart of Malaysia</p>
+    </div>
+
+    <div class="card">
+        <h3>Melaka</h3>
+        <p>Historic City</p>
+    </div>
+</body>
+</html>
