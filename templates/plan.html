@@ -11,7 +11,6 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #e8f5e9; margin: 0; text-align: center; }
         .navbar { background-color: #008080; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .logo { font-size: 24px; font-weight: bold; letter-spacing: 1px; }
         .nav-links a { color: white; text-decoration: none; margin-left: 25px; font-weight: 600; transition: color 0.3s; }
         .nav-links a:hover { color: #FFD700; }
         
@@ -20,15 +19,25 @@
         th { background-color: #2e7d32; color: white; }
         .col-check { text-align: center; width: 50px; }
         
-        .btn-pdf { background: #d32f2f; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-bottom: 50px; font-weight: bold; }
-        .btn-pdf:hover { background: #b71c1c; }
+        .btn-main { background: #2e7d32; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-bottom: 50px; font-weight: bold; }
+
+        /* Modal / Popup Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 50%; padding: 30px; border-radius: 10px; text-align: left; position: relative; max-height: 80vh; overflow-y: auto; }
+        .modal-header { border-bottom: 2px solid #2e7d32; padding-bottom: 10px; margin-bottom: 20px; color: #2e7d32; }
+        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+        .total-box { margin-top: 20px; text-align: right; font-size: 20px; font-weight: bold; color: #d32f2f; }
+        
+        .modal-footer { margin-top: 30px; display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-pdf { background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-close { background: #555; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="navbar">
-        <a href="{{ url_for('home') }}" class="nav-logo">
-           <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Malaysia Tourism" style="height: 60px; border-radius: 5px; background: white; padding: 5px;">
+        <a href="{{ url_for('home') }}"  class="nav-logo">
+           <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Malaysia Tourism"  style="height: 60px; border-radius: 5px; background: white; padding: 5px;">
         </a>
          <div class="nav-links">
             <a href="{{ url_for('home') }}">Home</a>
@@ -36,10 +45,9 @@
             <a href="{{ url_for('culture') }}">Culture</a>
             <a href="{{ url_for('plan') }}">Plan Trip</a>
         </div>
-
     </div>
 
-    <h1 style="color: #2e7d32; margin-top: 40px;">Trip Budget Estimator</h1>
+    <h1 style="color: #2e7d32; margin-top: 40px;">Trip Budget Estimate</h1>
 
     <table id="budgetTable">
         <thead>
@@ -102,14 +110,33 @@
         </tbody>
     </table>
 
-    <button class="btn-pdf" onclick="generatePDF()">Generate PDF</button>
+    <button class="btn-main" onclick="openSummary()">Calculate Total Price</button>
+
+    <div id="summaryModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tourism Malaysia - Trip Summary</h2>
+            </div>
+            
+            <div id="summaryList">
+                </div>
+
+            <div class="total-box" id="totalAmount">
+                Total: RM 0.00
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-close" onclick="closeSummary()">Close</button>
+                <button class="btn-pdf" onclick="generatePDF()">Generate Receipt (PDF)</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // 1. Get all selected rows
+        let selectedData = [];
+        let totalSum = 0;
+
+        function openSummary() {
             const checkboxes = document.querySelectorAll('.row-select:checked');
             
             if (checkboxes.length === 0) {
@@ -117,8 +144,10 @@
                 return;
             }
 
-            let tableData = [];
-            let totalPrice = 0;
+            selectedData = [];
+            totalSum = 0;
+            const listContainer = document.getElementById('summaryList');
+            listContainer.innerHTML = ''; // Clear previous data
 
             checkboxes.forEach((checkbox) => {
                 const row = checkbox.closest('tr');
@@ -126,33 +155,52 @@
                 const state = row.cells[2].innerText;
                 const price = parseFloat(checkbox.getAttribute('data-price'));
                 
-                tableData.push([destination, state, `RM ${price.toFixed(2)}`]);
-                totalPrice += price;
+                selectedData.push({ destination, state, price });
+                totalSum += price;
+
+                // Create the HTML for the list in the popup
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'summary-item';
+                itemDiv.innerHTML = `
+                    <span><strong>${destination}</strong> (${state})</span>
+                    <span>RM ${price.toFixed(2)}</span>
+                `;
+                listContainer.appendChild(itemDiv);
             });
 
-            // 2. Add Title
+            document.getElementById('totalAmount').innerText = `Total Price: RM ${totalSum.toFixed(2)}`;
+            document.getElementById('summaryModal').style.display = 'flex';
+        }
+
+        function closeSummary() {
+            document.getElementById('summaryModal').style.display = 'none';
+        }
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            let tableRows = selectedData.map(item => [item.destination, item.state, `RM ${item.price.toFixed(2)}`]);
+
             doc.setFontSize(22);
             doc.setTextColor(46, 125, 50);
             doc.text("Tourism Malaysia", 105, 20, { align: "center" });
 
-            // 3. Add Table to PDF
             doc.autoTable({
                 startY: 30,
                 head: [['Destination', 'State', 'Price']],
-                body: tableData,
+                body: tableRows,
                 theme: 'striped',
                 headStyles: { fillColor: [46, 125, 50] }
             });
 
-            // 4. Add Total Price (Bottom Right)
             const finalY = doc.lastAutoTable.finalY + 10;
             doc.setFontSize(14);
             doc.setTextColor(0, 0, 0);
             doc.setFont("helvetica", "bold");
-            doc.text(`Total Price: RM ${totalPrice.toFixed(2)}`, 190, finalY, { align: "right" });
+            doc.text(`Total Price: RM ${totalSum.toFixed(2)}`, 190, finalY, { align: "right" });
 
-            // 5. Save PDF
-            doc.save("Malaysia_Trip_Plan.pdf");
+            doc.save("Tourism_Malaysia_Receipt.pdf");
         }
     </script>
 
