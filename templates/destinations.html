@@ -22,6 +22,85 @@
         .card:hover { transform: translateY(-5px); }
         .card img { width: 100%; height: 160px; object-fit: cover; }
         .card-label { padding: 15px; font-weight: bold; color: #333; }
+
+        /* Popup Overlay */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }       
+
+        /* Popup Card */
+        .popup-card {
+            background: white;
+            width: 85%;
+            max-width: 950px;
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            animation: popupFade 0.3s ease;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #555;
+        }
+
+        .popup-content {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .places-list {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .places-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .places-list li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .places-list li:hover {
+            background: #e0f7fa;
+        }
+
+        /* Details Section */
+        .place-details {
+            flex: 2;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .place-details img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        @keyframes popupFade {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
     </style>
 </head>
 <body>
@@ -41,38 +120,183 @@
 
     <div class="container">
         <h1>Find Your Next Adventure</h1>
-        <input type="text" id="searchInput" onkeyup="filterDestinations()" placeholder="🔍 Search (e.g., Melaka, Food)...">
+        <input type="text" id="searchInput" onkeyup="filterDestinations()" placeholder="🔍 Search (e.g., Melaka, Penang)...">
 
         <div class="card-row">
-            <div class="card">
+            <div class="card" data-state="Kuala Lumpur">
                 <img src="{{ url_for('static', filename='images/thumb1.jpg') }}">
-                <div class="card-label">Kuala Lumpur City</div>
+                <div class="card-label">Kuala Lumpur</div>
             </div>
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/thumb2.jpg') }}">
-                <div class="card-label">Melaka History</div>
+            <div class="card" data-state="Melaka">
+                <img src="{{ url_for('static', filename='images/melaka.jpg') }}">
+                <div class="card-label">Melaka</div>
             </div>
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/thumb3.jpg') }}">
-                <div class="card-label">Penang Food</div>
+            <div class="card" data-state="Penang">
+                <img src="{{ url_for('static', filename='images/penang.jpg') }}">
+                <div class="card-label">Penang</div>
             </div>
-            <div class="card">
-                <img src="{{ url_for('static', filename='images/thumb1.jpg') }}">
-                <div class="card-label">Langkawi Islands</div>
+            <div class="card" data-state="Terengganu">
+                <img src="{{ url_for('static', filename='images/terengganu.jpg') }}">
+                <div class="card-label">Terengganu</div>
             </div>
         </div>
+
+        <!-- State Details Section -->
+        <div id="stateDetails" style="display:none; margin-top:40px; text-align:left;">
+            <h2 id="stateTitle" style="color:#004d40;"></h2>
+
+            <div style="display:flex; gap:30px; flex-wrap:wrap;">
+                <!-- Places List -->
+                <div style="flex:1; min-width:250px;">
+                    <h3>Places to Visit</h3>
+                    <ul id="placesList" style="list-style:none; padding:0;"></ul>
+                </div>
+
+                <!-- Place Information -->
+                <div style="flex:2; min-width:300px; background:white; padding:20px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
+                    <h3 id="placeName">Select a place</h3>
+                    <p id="placeDescription">Place description will appear here.</p>
+                </div>
+            </div>
+        </div> 
     </div>
 
     <script>
-        function filterDestinations() {
-            let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.getElementsByClassName('card');
-            for (let i = 0; i < cards.length; i++) {
-                let text = cards[i].innerText.toLowerCase();
-                if (text.includes(input)) cards[i].style.display = "block";
-                else cards[i].style.display = "none";
+    const tourismData = {
+        "Kuala Lumpur": [
+            {
+                name: "Petronas Twin Towers",
+                desc: "Malaysia’s most iconic skyscrapers.",
+                img: "{{ url_for('static', filename='images/petronas.jpg') }}"
+            },
+            {
+                name: "Batu Caves",
+                desc: "Limestone caves with a giant Murugan statue.",
+                img: "{{ url_for('static', filename='images/batu_caves.jpg') }}"
             }
+        ],
+        "Melaka": [
+            {
+                name: "A Famosa",
+                desc: "Historic Portuguese fortress.",
+                img: "{{ url_for('static', filename='images/a_famosa.jpg') }}"
+            },
+            {
+                name: "Jonker Street",
+                desc: "Cultural street famous for food and antiques.",
+                img: "{{ url_for('static', filename='images/jonker_street.jpg') }}"
+            }
+        ],
+        "Penang": [
+            {
+                name: "George Town",
+                desc: "UNESCO World Heritage Site.",
+                img: "{{ url_for('static', filename='images/georgetown.jpg') }}"
+            },
+            {
+                name: "Penang Hill",
+                desc: "Scenic views of Penang island.",
+                img: "{{ url_for('static', filename='images/penang_hill.jpg') }}"
+            }
+        ],
+        "Terengganu": [
+            {
+                name: "Redang Island",
+                desc: "Crystal-clear waters and coral reefs.",
+                img: "{{ url_for('static', filename='images/redang_island.jpg') }}"
+            },
+            {
+                name: "Crystal Mosque",
+                desc: "Modern glass mosque.",
+                img: "{{ url_for('static', filename='images/crystal_mosque.jpg') }}"
+            }
+        ]
+    };
+
+    /* Card click */
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+            openPopup(card.dataset.state);
+        });
+    });
+
+    function openPopup(state) {
+        document.getElementById('popupOverlay').style.display = "flex";
+        document.getElementById('popupStateTitle').innerText = state;
+
+        const list = document.getElementById('popupPlacesList');
+        list.innerHTML = "";
+
+        const places = tourismData[state];
+
+        places.forEach((place, index) => {
+            const li = document.createElement('li');
+            li.innerText = place.name;
+            li.onclick = () => updatePlace(place);
+            list.appendChild(li);
+
+            // Auto-display first place
+            if (index === 0) {
+                updatePlace(place);
+            }
+        });
+    }
+
+
+    function updatePlace(place) {
+        document.getElementById('placeTitle').innerText = place.name;
+        document.getElementById('placeDesc').innerText = place.desc;
+        document.getElementById('placeImage').src = place.img;
+    }
+
+    function resetDetails() {
+        document.getElementById('placeTitle').innerText = "Select a place";
+        document.getElementById('placeDesc').innerText = "Place description will appear here.";
+        document.getElementById('placeImage').src = "";
+    }
+
+    function closePopup() {
+        document.getElementById('popupOverlay').style.display = "none";
+    }
+
+    /* Close when clicking outside */
+    document.getElementById('popupOverlay').addEventListener('click', e => {
+        if (e.target.id === "popupOverlay") closePopup();
+    });
+
+    /* Search filter */
+    function filterDestinations() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let cards = document.getElementsByClassName('card');
+        for (let i = 0; i < cards.length; i++) {
+            cards[i].style.display =
+                cards[i].innerText.toLowerCase().includes(input) ? "block" : "none";
         }
+    }
     </script>
+
+
+    <div id="popupOverlay" class="popup-overlay">
+        <div class="popup-card">
+            <span class="close-popup" onclick="closePopup()">×</span>
+
+            <h2 id="popupStateTitle"></h2>
+
+            <div class="popup-content">
+                <!-- Places -->
+                <div class="places-list">
+                    <h3>Places to Visit</h3>
+                    <ul id="popupPlacesList"></ul>
+                </div>
+
+                <!-- Details -->
+                <div class="place-details">
+                    <img id="placeImage" src="" alt="">
+                    <h3 id="placeTitle">Select a place</h3>
+                    <p id="placeDesc">Place description will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
