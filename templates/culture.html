@@ -69,77 +69,73 @@
 
         hr.divider { margin: 40px auto; width: 80%; border: 0; border-top: 1px solid #ddd; }
         
-        /* --- APPEND THIS TO YOUR EXISTING CSS --- */
-    
-    /* The Modal Overlay (Dim Background) */
-    .modal-overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        display: flex;
-        justify-content: center; align-items: center;
-        opacity: 0; visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 2000; /* High z-index to sit on top of everything */
-    }
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 2000; 
+        }
 
-    .modal-overlay.active {
-        opacity: 1; visibility: visible;
-    }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
 
-    /* The Modal Box */
-    .modal-box {
-        background: white;
-        width: 900px; max-width: 90%; height: 500px;
-        display: flex;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-        position: relative;
-    }
+        /* Modal Box */
+        .modal-box {
+            background: white;
+            width: 900px; max-width: 90%; height: 500px;
+            display: flex;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
 
-    .modal-image-container {
-        flex: 1;
-        background-size: cover; background-position: center;
-    }
+        .modal-image-container {
+            flex: 1;
+            background-size: cover; background-position: center;
+        }
 
-    .modal-content-box {
-        flex: 1; padding: 50px;
-        display: flex; flex-direction: column; justify-content: center;
-        text-align: left; position: relative;
-    }
+        .modal-content-box {
+            flex: 1; padding: 50px;
+            display: flex; flex-direction: column; justify-content: center;
+            text-align: left; position: relative;
+        }
 
-    .close-btn {
-        position: absolute; top: 20px; right: 25px;
-        font-size: 28px; color: #888; cursor: pointer;
-        transition: color 0.2s;
-    }
-    .close-btn:hover { color: #333; }
+        .close-btn {
+            position: absolute; top: 20px; right: 25px;
+            font-size: 28px; color: #888; cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: #333; }
 
-    /* Modal Typography */
-    #modalTitle {
-        font-family: 'Kaushan Script', cursive; /* Matching your font link */
-        font-size: 3rem; color: #008080; margin: 0 0 15px 0;
-    }
+        /* Modal Typography */
+        #modalTitle {
+            font-family: 'Kaushan Script', cursive; 
+            font-size: 3rem; color: #008080; margin: 0 0 15px 0;
+        }
 
-    #modalDesc {
-        font-family: 'Poppins', sans-serif;
-        color: #555; line-height: 1.7; font-size: 1rem; margin-bottom: 30px;
-    }
+        #modalDesc {
+            font-family: 'Poppins', sans-serif;
+            color: #555; line-height: 1.7; font-size: 1rem; margin-bottom: 30px;
+        }
 
-    .explore-btn {
-        background-color: #008080; color: white; border: none;
-        padding: 12px 28px; font-size: 1rem; font-weight: 600;
-        border-radius: 6px; cursor: pointer; width: fit-content;
-    }
-    .explore-btn:hover { background-color: #006666; }
+        .explore-btn {
+            background-color: #008080; color: white; border: none;
+            padding: 12px 28px; font-size: 1rem; font-weight: 600;
+            border-radius: 6px; cursor: pointer; width: fit-content;
+        }
+        .explore-btn:hover { background-color: #006666; }
 
-    @media (max-width: 768px) {
-        .modal-box { flex-direction: column; height: auto; max-height: 90vh; overflow-y: auto; }
-        .modal-image-container { height: 200px; }
-        .modal-content-box { padding: 30px; }
-    }
+        @media (max-width: 768px) {
+            .modal-box { flex-direction: column; height: auto; max-height: 90vh; overflow-y: auto; }
+            .modal-image-container { height: 200px; }
+            .modal-content-box { padding: 30px; }
+        }
     </style>
 </head>
 <body>
@@ -159,7 +155,7 @@
     <h1 class="page-title">Malaysian Culture</h1>
 
     <div class="video-box">
-        <video width="100%" height="auto" controls poster="{{ url_for('static', filename='images/banner.jpg') }}">
+        <video id="cultureVideo" width="100%" height="auto" controls poster="{{ url_for('static', filename='images/banner.jpg') }}">
             <source src="{{ url_for('static', filename='videos/culture_video.mp4') }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -250,6 +246,7 @@
             </div>
         </div>
     </section>
+
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <div class="modal-image-container" id="modalImage"></div>
@@ -257,13 +254,16 @@
                 <span class="close-btn" onclick="closeModal()">&times;</span>
                 <h2 id="modalTitle">Dish Name</h2>
                 <p id="modalDesc">Description...</p>
-                <button class="explore-btn">Order Now</button>
             </div>
         </div>
     </div>
 
+    <audio id="audioPlayer" style="display: none;"></audio>
+
     <script>
-    // COMPLETE DATA FOR ALL SECTIONS
+    // ============================================
+    // 1. CONTENT MODAL LOGIC
+    // ============================================
     const modalData = {
         // --- 1. Local Delicacies ---
         'nasi-lemak': {
@@ -299,7 +299,7 @@
             img: "{{ url_for('static', filename='images/saree.jpg') }}"
         },
 
-        // --- 3. Major Festivals (NEW) ---
+        // --- 3. Major Festivals ---
         'raya': {
             title: 'Hari Raya Aidilfitri',
             desc: 'Hari Raya Aidilfitri is celebrated by Muslims worldwide to mark the end of Ramadan, the holy month of fasting. It is a time of forgiveness and visiting loved ones.',
@@ -323,9 +323,7 @@
     const modalImage = document.getElementById('modalImage');
 
     function openModal(key) {
-        // Look up the key in our expanded data object
         const data = modalData[key];
-        
         if (data) {
             modalTitle.innerText = data.title;
             modalDesc.innerText = data.desc;
@@ -341,6 +339,85 @@
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
-</script>
+
+    // ============================================
+    // 2. INVISIBLE BACKGROUND MUSIC LOGIC
+    // ============================================
+    
+    // --- CONFIGURATION ---
+    const songs = [
+        { title: "Canggung", file: "{{ url_for('static', filename='music/song1.mp3') }}" },
+        { title: "Naam Sidi", file: "{{ url_for('static', filename='music/song2.mp3') }}" },
+        { title: "Inang Kampung", file: "{{ url_for('static', filename='music/song3.mp3') }}" }
+    ];
+
+    // --- RETRIEVE STATE ---
+    let savedIndex = parseInt(sessionStorage.getItem('musicIndex')) || 0;
+    let savedTime = parseFloat(sessionStorage.getItem('musicTime')) || 0;
+    let isPlaying = sessionStorage.getItem('musicPlaying') === 'true';
+
+    // --- INIT GHOST PLAYER ---
+    const audio = document.getElementById("audioPlayer");
+
+    if (audio) {
+        audio.src = songs[savedIndex].file;
+        audio.currentTime = savedTime;
+
+        // Resume if playing
+        if (isPlaying) {
+            var playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log("Background music continued.");
+                }).catch(error => {
+                    console.log("Browser blocked background autoplay.");
+                });
+            }
+        }
+
+        // --- CONSTANT SAVING ---
+        audio.ontimeupdate = function() {
+            if (audio.duration) {
+                sessionStorage.setItem('musicTime', audio.currentTime);
+            }
+        };
+
+        // --- AUTO NEXT SONG ---
+        audio.onended = function() {
+            let nextIndex = (savedIndex + 1) % songs.length;
+            sessionStorage.setItem('musicIndex', nextIndex);
+            audio.src = songs[nextIndex].file;
+            audio.play();
+            savedIndex = nextIndex;
+        };
+    }
+
+    // ============================================
+    // 3. SMART VIDEO PAUSE (PAUSE MUSIC WHEN WATCHING VIDEO)
+    // ============================================
+    const cultureVideo = document.getElementById('cultureVideo');
+    
+    if (cultureVideo && audio) {
+        // When video plays -> Pause the background music
+        cultureVideo.addEventListener('play', () => {
+            if (!audio.paused) {
+                audio.pause();
+                console.log("Music paused for video.");
+            }
+        });
+
+        // When video pauses/ends -> Resume music ONLY if it was meant to be on
+        const resumeMusic = () => {
+            if (sessionStorage.getItem('musicPlaying') === 'true') {
+                audio.play();
+                console.log("Music resumed.");
+            }
+        };
+
+        cultureVideo.addEventListener('pause', resumeMusic);
+        cultureVideo.addEventListener('ended', resumeMusic);
+    }
+
+    </script>
 </body>
 </html>

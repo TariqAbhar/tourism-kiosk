@@ -141,18 +141,15 @@
             </div>
         </div>
 
-        <!-- State Details Section -->
         <div id="stateDetails" style="display:none; margin-top:40px; text-align:left;">
             <h2 id="stateTitle" style="color:#004d40;"></h2>
 
             <div style="display:flex; gap:30px; flex-wrap:wrap;">
-                <!-- Places List -->
                 <div style="flex:1; min-width:250px;">
                     <h3>Places to Visit</h3>
                     <ul id="placesList" style="list-style:none; padding:0;"></ul>
                 </div>
 
-                <!-- Place Information -->
                 <div style="flex:2; min-width:300px; background:white; padding:20px; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1);">
                     <h3 id="placeName">Select a place</h3>
                     <p id="placeDescription">Place description will appear here.</p>
@@ -161,7 +158,33 @@
         </div> 
     </div>
 
+    <div id="popupOverlay" class="popup-overlay">
+        <div class="popup-card">
+            <span class="close-popup" onclick="closePopup()">×</span>
+
+            <h2 id="popupStateTitle"></h2>
+
+            <div class="popup-content">
+                <div class="places-list">
+                    <h3>Places to Visit</h3>
+                    <ul id="popupPlacesList"></ul>
+                </div>
+
+                <div class="place-details">
+                    <img id="placeImage" src="" alt="">
+                    <h3 id="placeTitle">Select a place</h3>
+                    <p id="placeDesc">Place description will appear here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer" style="display: none;"></audio>
+
     <script>
+    // ============================================
+    // 1. ORIGINAL DESTINATION LOGIC
+    // ============================================
     const tourismData = {
         "Kuala Lumpur": [
             {
@@ -242,17 +265,10 @@
         });
     }
 
-
     function updatePlace(place) {
         document.getElementById('placeTitle').innerText = place.name;
         document.getElementById('placeDesc').innerText = place.desc;
         document.getElementById('placeImage').src = place.img;
-    }
-
-    function resetDetails() {
-        document.getElementById('placeTitle').innerText = "Select a place";
-        document.getElementById('placeDesc').innerText = "Place description will appear here.";
-        document.getElementById('placeImage').src = "";
     }
 
     function closePopup() {
@@ -273,30 +289,58 @@
                 cards[i].innerText.toLowerCase().includes(input) ? "block" : "none";
         }
     }
+
+    // ============================================
+    // 2. INVISIBLE BACKGROUND MUSIC LOGIC
+    // ============================================
+    
+    // --- CONFIGURATION ---
+    const songs = [
+        { title: "Canggung", file: "{{ url_for('static', filename='music/song1.mp3') }}" },
+        { title: "Naam Sidi", file: "{{ url_for('static', filename='music/song2.mp3') }}" },
+        { title: "Inang Kampung", file: "{{ url_for('static', filename='music/song3.mp3') }}" }
+    ];
+
+    // --- RETRIEVE STATE ---
+    let savedIndex = parseInt(sessionStorage.getItem('musicIndex')) || 0;
+    let savedTime = parseFloat(sessionStorage.getItem('musicTime')) || 0;
+    let isPlaying = sessionStorage.getItem('musicPlaying') === 'true';
+
+    // --- INIT GHOST PLAYER ---
+    const audio = document.getElementById("audioPlayer");
+
+    if (audio) {
+        audio.src = songs[savedIndex].file;
+        audio.currentTime = savedTime;
+
+        // Resume if playing
+        if (isPlaying) {
+            var playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    console.log("Background music continued.");
+                }).catch(error => {
+                    console.log("Browser blocked background autoplay.");
+                });
+            }
+        }
+
+        // --- CONSTANT SAVING ---
+        audio.ontimeupdate = function() {
+            if (audio.duration) {
+                sessionStorage.setItem('musicTime', audio.currentTime);
+            }
+        };
+
+        // --- AUTO NEXT SONG ---
+        audio.onended = function() {
+            let nextIndex = (savedIndex + 1) % songs.length;
+            sessionStorage.setItem('musicIndex', nextIndex);
+            audio.src = songs[nextIndex].file;
+            audio.play();
+            savedIndex = nextIndex;
+        };
+    }
     </script>
-
-
-    <div id="popupOverlay" class="popup-overlay">
-        <div class="popup-card">
-            <span class="close-popup" onclick="closePopup()">×</span>
-
-            <h2 id="popupStateTitle"></h2>
-
-            <div class="popup-content">
-                <!-- Places -->
-                <div class="places-list">
-                    <h3>Places to Visit</h3>
-                    <ul id="popupPlacesList"></ul>
-                </div>
-
-                <!-- Details -->
-                <div class="place-details">
-                    <img id="placeImage" src="" alt="">
-                    <h3 id="placeTitle">Select a place</h3>
-                    <p id="placeDesc">Place description will appear here.</p>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
