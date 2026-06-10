@@ -35,11 +35,11 @@ An interactive, web-based tourism kiosk application built to provide users with 
 
 4. **Access the Kiosk:**
    Open your web browser and navigate to the local address provided in the terminal (typically `http://127.0.0.1:5000`).
+## 👨‍💻 Developers
+Developed by:
+* **Tariq Abhar Bin Abd Jalil**
+* **Aris Aidil Bin Baharuddin**
+* **Muhammad Danish Hilmi Bin Norhisham**
+* **Muhamad Zaim Bin Mohd Zamrie**
 
-## 👨‍💻 Developer
-Developed by 
-**TARIQ ABHAR BIN ABD JALIL**
-**ARIS AIDIL BIN BAHARUDDIN**
-**MUHAMMAD DANISH HILMI BIN NORHISHAM**
-**MUHAMAD ZAIM BIN MOHD ZAMRIE**
-We are Multimedia Computing student at UiTM Jasin, with a focus on Interactive Multimedia, Python development, and UI/UX design.
+We are Multimedia Computing students at UiTM Jasin, with a focus on Interactive Multimedia, Python development, and UI/UX design.
